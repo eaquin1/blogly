@@ -19,4 +19,10 @@ class User(db.Model):
                     autoincrement=True)
     first_name = db.Column(db.String(20), nullable=False)
     last_name = db.Column(db.String(25), nullable=False, unique=True)
-    image_url = db.Column(db.String, default="https://images.unsplash.com/photo-1533907650686-70576141c030")
+    image_url = db.Column(db.String, nullable=False, default="https://images.unsplash.com/photo-1533907650686-70576141c030")
+
+    @property
+    def full_name(self):
+        """Return full name of user"""
+
+        return f"{self.first_name} {self.last_name}"

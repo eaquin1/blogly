@@ -14,7 +14,7 @@ burton = User(first_name="Joel", last_name="Burton", image_url="https://images.u
 smith = User(first_name="Jane", last_name="Smith", image_url="https://images.unsplash.com/photo-1585393311457-f99f89ae7004")
 swift = User(first_name="Gail", last_name="Swift", image_url="https://images.unsplash.com/photo-1585393313732-03777bb1f461")
 cures = User(first_name="Jimmy", last_name="Cures", image_url="https://images.unsplash.com/photo-1587160046330-8efc5abe41fa")
-wexler = User(first_name="Kim", last_name="Wexler", image_url="https://images.unsplash.com/photo-1583183712060-99c0ae2c42d")
+wexler = User(first_name="Kim", last_name="Wexler", image_url="https://images.unsplash.com/photo-1585393313732-03777bb1f461")
 
 # Add new objects to session, so they'll persist
 db.session.add(alda)
