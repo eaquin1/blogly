@@ -1,4 +1,4 @@
-from models import User, db
+from models import User, db, Post
 from app import app
 
 #Create all tables
@@ -16,13 +16,19 @@ swift = User(first_name="Gail", last_name="Swift", image_url="https://images.uns
 cures = User(first_name="Jimmy", last_name="Cures", image_url="https://images.unsplash.com/photo-1587160046330-8efc5abe41fa")
 wexler = User(first_name="Kim", last_name="Wexler", image_url="https://images.unsplash.com/photo-1585393313732-03777bb1f461")
 
+#Add posts
+cats = Post(title="Cats", content="Adoptable cats listed here", user_id = 1)
+dogs = Post(title="Dogs", content="Adoptable dogs listed here", user_id= 1)
+shrimp = Post(title="Shrimp", content="Adoptable shrimp listed here", user_id = 2)
+fish = Post(title="Fish", content="Adoptable fish listed here", user_id = 6)
+hamster = Post(title="Hamster", content="Adoptable hamsters listed here", user_id = 4)
+chickens = Post(title="Chickens", content="Adoptable chickens listed here", user_id = 3)
+
+
 # Add new objects to session, so they'll persist
-db.session.add(alda)
-db.session.add(burton)
-db.session.add(smith)
-db.session.add(swift)
-db.session.add(cures)
-db.session.add(wexler)
+db.session.add_all([alda, burton, smith, swift, cures, wexler])
+
+db.session.add_all([cats, dogs, shrimp, fish, hamster, chickens])
 
 # Commit--otherwise, this never gets saved!
 db.session.commit()

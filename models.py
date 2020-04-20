@@ -23,7 +23,7 @@ class User(db.Model):
     last_name = db.Column(db.String(25), nullable=False, unique=True)
     image_url = db.Column(db.Text, nullable=False, default="https://images.unsplash.com/photo-1533907650686-70576141c030")
 
-    posts = db.relationship('Post', backref="user")
+    posts = db.relationship("Post", backref="user", cascade="all, delete-orphan")
 
     @property
     def full_name(self):
@@ -42,6 +42,11 @@ class Post(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
+    @property
+    def friendly_date(self):
+        """"Return user friendly date"""
+        return f'{self.created_at.strftime("%b %d %Y %H:%M %p")}'
+        
 
 # SELECT id FROM users
 # JOIN posts ON posts.user_id = users.id
