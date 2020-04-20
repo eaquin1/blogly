@@ -47,6 +47,8 @@ def submit_form():
     db.session.add(user)
     db.session.commit()
 
+    flash(f"User {user.full_name} added")
+
     return redirect('/users')
 
 @app.route("/users/<int:user_id>")
@@ -72,15 +74,17 @@ def edit_user(user_id):
 
     db.session.add(user)
     db.session.commit()
+    flash(f"User {user.full_name} edited")
 
     return redirect("/users")
 
 @app.route("/users/<int:user_id>/delete", methods=["POST"])
 def delete_user(user_id):
     """Delete user from database"""
-    user = User.query.filter_by(id = user_id).delete()
+    user = User.query.filter_by(id = user_id).first()
+    db.session.delete(user)
     db.session.commit()
-
+    flash(f"User {user.full_name} deleted")
     return redirect("/users")
 
 @app.route("/users/<int:user_id>/posts/new")
@@ -99,8 +103,11 @@ def handle_post(user_id):
     post = Post(user=user, title=title, content=content)
     db.session.add(post)
     db.session.commit()
+    flash(f"Post '{post.title}' added")
 
     return redirect(f'/users/{user.id}')    
+
+# ************POST ROUTES***************
 
 @app.route("/posts/<int:post_id>")
 def show_post(post_id):
@@ -127,14 +134,17 @@ def handle_edit(post_id):
     db.session.add(post)
     db.session.commit()
 
-    return redirect(f'/posts/{post.user_id}')
+    return redirect(f'/posts/{post.id}')
 
 @app.route("/posts/<int:post_id>/delete", methods=["POST"])
 def delete_post(post_id):
     """Delete post"""
-    Post.query.filter_by(id = post_id).delete()
+    post = Post.query.filter_by(id = post_id).first()
+    db.session.delete(post)
+
     db.session.commit()
 
+    flash(f"Post '{post.title}' deleted")
     return redirect("/")
 
 @app.errorhandler(404)
