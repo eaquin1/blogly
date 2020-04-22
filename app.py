@@ -91,7 +91,8 @@ def delete_user(user_id):
 def add_post(user_id):
     """Form for user to add new post"""
     user = User.query.get_or_404(user_id)
-    return render_template("posts/new.html", user=user)
+    tags = Tag.query.all()
+    return render_template("posts/new.html", user=user, tags=tags)
 
 @app.route("/users/<int:user_id>/posts/new", methods=["POST"])
 def handle_post(user_id):
@@ -132,7 +133,6 @@ def handle_edit(post_id):
     post.title = request.form['title']
     post.content = request.form['content']
     post.tags.name = request.form.getlist('tags[]')
-    print(f"POSTS ARE BLUE {post.tags.name}")
 
     db.session.add(post)
     db.session.commit()
