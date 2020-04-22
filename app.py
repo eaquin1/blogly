@@ -7,7 +7,7 @@ from models import db, connect_db, User, Post, Tag, PostTag
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///blogly'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_ECHO'] = True
+app.config['SQLALCHEMY_ECHO'] = False
 
 app.config['SECRET_KEY'] = "shhhh"
 
@@ -87,6 +87,8 @@ def delete_user(user_id):
     flash(f"User {user.full_name} deleted")
     return redirect("/users")
 
+# ************POST ROUTES***************
+
 @app.route("/users/<int:user_id>/posts/new")
 def add_post(user_id):
     """Form for user to add new post"""
@@ -100,15 +102,19 @@ def handle_post(user_id):
     user = User.query.get_or_404(user_id)
     title = request.form['title']
     content = request.form['content']
-
+    
     post = Post(user=user, title=title, content=content)
+    tag_ids = request.form.getlist('tags')
+    
+    for tag in tag_ids:
+        tag_specified = Tag.query.get(tag)
+        post.tags.append(tag_specified)
+
     db.session.add(post)
     db.session.commit()
     flash(f"Post '{post.title}' added")
 
     return redirect(f'/users/{user.id}')    
-
-# ************POST ROUTES***************
 
 @app.route("/posts/<int:post_id>")
 def show_post(post_id):
@@ -121,7 +127,7 @@ def show_post(post_id):
 def edit_post(post_id):
     """Render edit post form"""
     post = Post.query.get_or_404(post_id)
-    tags = post.tags
+    tags = Tag.query.all()
 
     return render_template('posts/edit.html', post=post, tags=tags)
 
@@ -132,7 +138,8 @@ def handle_edit(post_id):
 
     post.title = request.form['title']
     post.content = request.form['content']
-    post.tags.name = request.form.getlist('tags[]')
+    tag_ids = request.form.getlist('tags')
+    post.tags = Tag.query.filter(Tag.id.in_(tag_ids)).all()
 
     db.session.add(post)
     db.session.commit()
