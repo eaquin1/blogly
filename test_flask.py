@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from app import app
-from models import db, User, Post
+from models import db, User, Post, Tag, PostTag
 
 # Use test database and don't clutter tests with SQL
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///sqla_blogly_test'
@@ -68,7 +68,7 @@ class UserViewsTestCase(TestCase):
         with app.test_client() as client:
             resp = client.get("/users/1035829351")
             html = resp.get_data(as_text=True)
-            
+
             self.assertEqual(resp.status_code, 404)
             self.assertIn("<p>What you were looking for is just not there.</p>", html)
     
@@ -88,7 +88,7 @@ class UserViewsTestCase(TestCase):
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
-            self.assertNotIn("Testingtitle", html)
+            self.assertNotIn("Hope this works", html)
 
     
             

@@ -9,7 +9,16 @@
 <p><i>By <a href="/users/{{post.user_id}}">{{ post.user.full_name }}</a>
     on {{ post.friendly_date }}
   </i></p>
-<form action="">
+
+  {% if tags %}
+  <p>
+      <b>Tags:</b>
+      {% for tag in tags %}
+    <a href="/tags/{{tag.id}}"><i class="badge badge-primary">{{ tag.name }}</i></a>
+      {% endfor %}
+  </p>
+  {% endif %}
+<form>
   <button class="btn btn-outline-primary" formaction="/users/{{post.user_id}}">Cancel</button>
   <button class="btn btn-primary" formaction="/posts/{{post.id}}/edit" formmethod="GET">Edit</button>
   <button class="btn btn-danger" formaction="/posts/{{post.id}}/delete" formmethod="POST">Delete</button>

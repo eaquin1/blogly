@@ -42,11 +42,30 @@ class Post(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
+    # direct navigation: post -> post_tag and back
+    # tag_assigned_to_post = db.relationship('PostTag', backref='posts')
+
+    
+
     @property
     def friendly_date(self):
         """"Return user friendly date"""
         return f'{self.created_at.strftime("%b %d %Y %H:%M %p")}'
         
+class Tag(db.Model):
+    """Tags"""
 
-# SELECT id FROM users
-# JOIN posts ON posts.user_id = users.id
+    __tablename__ = "tags"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.Text, unique=True)
+
+    # direct navigation: post -> tag and back
+    posts = db.relationship('Post', secondary='posts_tags', cascade="all, delete", backref='tags')
+
+class PostTag(db.Model):
+    """Mapping of a post to a tag"""
+
+    __tablename__ = "posts_tags"
+    post_id = db.Column(db.Integer, db.ForeignKey("posts.id"), primary_key=True)
+    tag_id = db.Column(db.Integer, db.ForeignKey("tags.id"), primary_key=True)
